@@ -29,7 +29,11 @@ def url_shorten(req: UrlShortenRequest, db: SessionDep):
     short_code = generate_short_code(db)
 
     new_url = Url(
-        original_text=req.original_url, tracking_token=uuid4(), short_code=short_code
+        original_url=str(req.original_url), tracking_token=str(uuid4()), short_code=short_code
     )
+
+    db.add(new_url)
+    db.commit()
+    db.refresh(new_url)
 
     return new_url
